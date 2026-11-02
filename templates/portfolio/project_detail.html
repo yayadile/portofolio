@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — {{ profile.display_name|default:"PORTFOLIO" }}{% endblock %}
+{% block content %}
+
+<section class="wrap section">
+  <p class="back"><a href="{% url 'home' %}#work">&lt;- back to work</a></p>
+  <p class="kicker">* project file *</p>
+  <h1 class="mega small">{{ project.title }}</h1>
+  {% if project.tagline %}<p class="headline">{{ project.tagline }}</p>{% endif %}
+
+  <div class="duo frame detail-img">
+    {% if project.image %}
+      <img src="{{ project.image.url }}" alt="{{ project.title }}">
+    {% else %}
+      <div class="duo-empty">NO IMAGE<br>upload via admin -&gt;</div>
+    {% endif %}
+  </div>
+
+  <div class="cols">
+    <div class="about-text">
+      {{ project.description|linebreaksbr|default:"deskripsi project diisi di admin." }}
+    </div>
+    <ul class="facts">
+      {% if project.tech %}<li><b>tech</b><span>{{ project.tech }}</span></li>{% endif %}
+      {% if project.link_url %}<li><b>live</b><span><a href="{{ project.link_url }}" target="_blank" rel="noopener">{{ project.link_url }}</a></span></li>{% endif %}
+      {% if project.repo_url %}<li><b>repo</b><span><a href="{{ project.repo_url }}" target="_blank" rel="noopener">{{ project.repo_url }}</a></span></li>{% endif %}
+    </ul>
+  </div>
+</section>
+
+{% if others %}
+<section class="wrap section">
+  <h2 class="sec-head"><span>+</span> / more work</h2>
+  <div class="mini-cards">
+    {% for p in others %}
+    <a class="mini-card" href="{% url 'project_detail' p.slug %}">
+      <span class="mini-no">{{ forloop.counter|stringformat:"02d" }}</span>
+      <b>{{ p.title }}</b>
+      <span class="mini-go">-&gt;</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

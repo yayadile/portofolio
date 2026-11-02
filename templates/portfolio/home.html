@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.display_name|default:"PORTFOLIO" }} — {{ profile.headline }}{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero wrap">
+  <p class="kicker">* portfolio — vol.01 *</p>
+  <h1 class="mega">{{ profile.display_name|default:"YOUR NAME" }}</h1>
+  <p class="headline">{{ profile.headline }}</p>
+  <p class="meta-line">
+    {% if profile.pronouns %}[{{ profile.pronouns }}]{% endif %}
+    {% if profile.location %} — {{ profile.location }}{% endif %}
+  </p>
+
+  <div class="hero-photo">
+    <div class="duo frame">
+      {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" alt="{{ profile.display_name }}">
+      {% else %}
+        <div class="duo-empty">NO PHOTO<br>upload via admin -&gt;</div>
+      {% endif %}
+    </div>
+    <span class="stamp">100% human*</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>{{ profile.marquee_text|default:"OPEN FOR PROJECTS * " }}</span>
+    <span>{{ profile.marquee_text|default:"OPEN FOR PROJECTS * " }}</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="wrap section">
+  <h2 class="sec-head"><span>01</span> / about</h2>
+  <div class="cols">
+    <div class="about-text">
+      {{ profile.about|linebreaksbr|default:"tulis tentang kamu di admin -> site profile." }}
+    </div>
+    <ul class="facts">
+      <li><b>name</b><span>{{ profile.display_name }}</span></li>
+      <li><b>pronouns</b><span>{{ profile.pronouns|default:"-" }}</span></li>
+      <li><b>based</b><span>{{ profile.location|default:"-" }}</span></li>
+      <li><b>focus</b><span>creative tech, ar, games</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" class="wrap section">
+  <h2 class="sec-head"><span>02</span> / selected work</h2>
+  <div class="cards">
+    {% for p in projects %}
+    <article class="card {% cycle 'card-white' 'card-blue' %}">
+      <a class="card-img duo" href="{% url 'project_detail' p.slug %}">
+        {% if p.image %}
+          <img src="{{ p.image.url }}" alt="{{ p.title }}">
+        {% else %}
+          <div class="duo-empty">NO IMAGE</div>
+        {% endif %}
+      </a>
+      <div class="card-body">
+        <p class="card-no">{{ forloop.counter|stringformat:"02d" }}</p>
+        <h3 class="card-title"><a href="{% url 'project_detail' p.slug %}">{{ p.title }}</a></h3>
+        {% if p.tagline %}<p class="card-tagline">{{ p.tagline }}</p>{% endif %}
+        {% if p.tech %}<p class="tags">{% for t in p.tech_list %}<span class="tag">{{ t }}</span>{% endfor %}</p>{% endif %}
+        <p class="card-links">
+          <a href="{% url 'project_detail' p.slug %}">read more -&gt;</a>
+          {% if p.link_url %}<a href="{{ p.link_url }}" target="_blank" rel="noopener">live</a>{% endif %}
+          {% if p.repo_url %}<a href="{{ p.repo_url }}" target="_blank" rel="noopener">repo</a>{% endif %}
+        </p>
+      </div>
+    </article>
+    {% empty %}
+    <p class="empty-note">belum ada project — tambah lewat admin -&gt; projects.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" class="wrap section">
+  <h2 class="sec-head"><span>03</span> / stack</h2>
+  <div class="stack-box">
+    {% for name, items in profile.stack_groups %}
+    <div class="stack-row">
+      <b>{{ name|default:"misc" }}</b>
+      <span class="dots"></span>
+      <span>{{ items|join:", " }}</span>
+    </div>
+    {% empty %}
+    <p class="empty-note">isi stack di admin -> site profile.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="wrap section">
+  <h2 class="sec-head"><span>04</span> / contact</h2>
+  <div class="contact-panel">
+    <p class="contact-big">let's make<br>something weird_</p>
+    <div class="contact-links">
+      {% if profile.email %}<a href="mailto:{{ profile.email }}">email -&gt;</a>{% endif %}
+      {% if profile.github_url %}<a href="{{ profile.github_url }}" target="_blank" rel="noopener">github -&gt;</a>{% endif %}
+      {% if profile.instagram_url %}<a href="{{ profile.instagram_url }}" target="_blank" rel="noopener">instagram -&gt;</a>{% endif %}
+      {% if profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener">linkedin -&gt;</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

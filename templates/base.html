@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ profile.display_name|default:"PORTFOLIO" }}{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Intel+One+Mono:ital,wght@0,400;0,500;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo" href="{% url 'home' %}">{{ profile.display_name|default:"W/Y" }}_</a>
+  <nav class="nav">
+    <a href="{% url 'home' %}#about">about</a>
+    <a href="{% url 'home' %}#work">work</a>
+    <a href="{% url 'home' %}#stack">stack</a>
+    <a href="{% url 'home' %}#contact">contact</a>
+  </nav>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <span>(c) {% now "Y" %} {{ profile.display_name|default:"me" }}</span>
+    <span>built with django * set in admin</span>
+    <a href="/admin/">admin -&gt;</a>
+  </div>
+</footer>
+
+</body>
+</html>
