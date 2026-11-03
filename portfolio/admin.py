@@ -8,17 +8,17 @@ class SiteProfileAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'headline', 'location')
     fieldsets = (
         ('Identitas', {
-            'fields': ('display_name', 'pronouns', 'headline', 'location', 'photo'),
+            'fields': ('display_name', 'pronouns', 'headline', 'headline_en', 'location', 'photo'),
         }),
         ('Tentang', {
-            'fields': ('about', 'marquee_text'),
+            'fields': ('about', 'about_en', 'marquee_text', 'marquee_text_en'),
         }),
         ('Kontak & Sosial', {
             'fields': ('email', 'github_url', 'instagram_url', 'linkedin_url'),
         }),
         ('Tech Stack', {
-            'fields': ('stack',),
-            'description': 'Satu grup per baris, format "Grup: item1, item2".',
+            'fields': ('stack', 'stack_en'),
+            'description': 'Satu grup per baris, format "Grup: item1, item2". Kolom _en opsional.',
         }),
     )
 
@@ -40,6 +40,6 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ('title', 'tagline', 'tech')
     prepopulated_fields = {'slug': ('title',)}
     fields = (
-        'title', 'slug', 'tagline', 'description', 'tech',
+        'title', 'slug', 'tagline', 'tagline_en', 'description', 'description_en', 'tech',
         'image', 'link_url', 'repo_url', 'featured', 'order',
     )

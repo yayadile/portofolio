@@ -1,6 +1,6 @@
-{% load static %}
+{% load static lang_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANG|default:'id' }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,10 +15,13 @@
 <header class="topbar">
   <a class="logo" href="{% url 'home' %}">{{ profile.display_name|default:"W/Y" }}_</a>
   <nav class="nav">
-    <a href="{% url 'home' %}#about">about</a>
-    <a href="{% url 'home' %}#work">work</a>
-    <a href="{% url 'home' %}#stack">stack</a>
-    <a href="{% url 'home' %}#contact">contact</a>
+    <a href="{% url 'home' %}#about">{% t 'nav_about' %}</a>
+    <a href="{% url 'home' %}#work">{% t 'nav_work' %}</a>
+    <a href="{% url 'home' %}#stack">{% t 'nav_stack' %}</a>
+    <a href="{% url 'home' %}#contact">{% t 'nav_contact' %}</a>
+    <span class="lang-toggle">
+      <a href="{% url 'set_lang' 'id' %}" class="{% if request.LANG == 'id' %}active{% endif %}">ID</a><span class="sep">/</span><a href="{% url 'set_lang' 'en' %}" class="{% if request.LANG == 'en' %}active{% endif %}">EN</a>
+    </span>
   </nav>
 </header>
 
@@ -29,7 +32,7 @@
 <footer class="footer">
   <div class="wrap footer-in">
     <span>(c) {% now "Y" %} {{ profile.display_name|default:"me" }}</span>
-    <span>built with django * set in admin</span>
+    <span>{% t 'footer_built' %}</span>
     <a href="/admin/">admin -&gt;</a>
   </div>
 </footer>

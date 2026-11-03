@@ -40,6 +40,16 @@ Catatan:
 - Profil cuma bisa satu — tombol "add" disembunyikan kalau udah ada.
 - Urutan project diatur dari kolom `order` (kecil = duluan).
 
+## Fitur translate ID/EN
+
+Ada toggle **ID / EN** di navbar. Cara kerjanya:
+
+- **Konten** (headline, bio, tagline, deskripsi, marquee): isi versi English di kolom yang berakhiran `_en` di admin
+  (mis. `about_en`, `description_en`). **Kalau dikosongkan, otomatis fallback ke bahasa Indonesia** — jadi nggak wajib diisi semua.
+- **String UI** (menu, judul section, tombol): semuanya di satu file `portfolio/lang.py`, format kamus `{'id': ..., 'en': ...}`.
+  Tinggal edit file itu kalau mau nambah/ubah teks.
+- Bahasa pilihan disimpan di session pengunjung (`/lang/id/` atau `/lang/en/`), default Indonesia.
+
 ## Struktur
 
 ```

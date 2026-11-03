@@ -1,15 +1,26 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Project, SiteProfile
+
+
+def _lang(request):
+    return getattr(request, 'LANG', 'id')
+
+
+def set_lang(request, code):
+    request.session['lang'] = 'en' if code == 'en' else 'id'
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def home(request):
     profile = SiteProfile.objects.first()
     projects = Project.objects.all()
+    lang = _lang(request)
     return render(request, 'portfolio/home.html', {
         'profile': profile,
         'projects': projects,
         'featured': projects.filter(featured=True),
+        'stack_groups': profile.stack_groups_for(lang) if profile else [],
     })
 
 

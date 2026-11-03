@@ -6,8 +6,10 @@ class SiteProfile(models.Model):
     display_name = models.CharField(max_length=80, default='WANN/YAYA')
     pronouns = models.CharField(max_length=40, blank=True, default='she/they')
     headline = models.CharField(max_length=120, default='Illustrator & Game Developer')
+    headline_en = models.CharField(max_length=120, blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
     location = models.CharField(max_length=80, blank=True, default='Semarang, ID')
     about = models.TextField(blank=True)
+    about_en = models.TextField(blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
     photo = models.ImageField(
         upload_to='profile/', blank=True,
         help_text='Foto kamu. Otomatis jadi duotone biru begitu di-upload.',
@@ -20,9 +22,11 @@ class SiteProfile(models.Model):
         blank=True,
         help_text='Satu grup per baris. Format: "Grup: item1, item2". Contoh: "Languages: Dart, PHP, JS"',
     )
+    stack_en = models.TextField(blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
     marquee_text = models.CharField(
         max_length=200, blank=True, default='OPEN FOR PROJECTS * AR * GAMES * CREATIVE TECH * '
     )
+    marquee_text_en = models.CharField(max_length=200, blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
 
     class Meta:
         verbose_name = 'Site Profile'
@@ -32,8 +36,14 @@ class SiteProfile(models.Model):
         return f'Site Profile ({self.display_name})'
 
     def stack_groups(self):
+        return self.stack_groups_for('id')
+
+    def stack_groups_for(self, lang='id'):
+        raw = self.stack
+        if lang == 'en' and (self.stack_en or '').strip():
+            raw = self.stack_en
         groups = []
-        for line in self.stack.splitlines():
+        for line in raw.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -50,7 +60,9 @@ class Project(models.Model):
     title = models.CharField(max_length=120)
     slug = models.SlugField(unique=True)
     tagline = models.CharField(max_length=200, blank=True)
+    tagline_en = models.CharField(max_length=200, blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
     description = models.TextField(blank=True)
+    description_en = models.TextField(blank=True, help_text='Versi English (kosong = pakai yang Indonesia).')
     tech = models.CharField(
         max_length=300, blank=True,
         help_text='Pisahkan dengan koma. Contoh: Flutter, MindAR, Blender',

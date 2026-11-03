@@ -1,24 +1,26 @@
 {% extends "base.html" %}
+{% load lang_tags %}
 {% block title %}{{ project.title }} — {{ profile.display_name|default:"PORTFOLIO" }}{% endblock %}
 {% block content %}
 
 <section class="wrap section">
-  <p class="back"><a href="{% url 'home' %}#work">&lt;- back to work</a></p>
-  <p class="kicker">* project file *</p>
+  <p class="back"><a href="{% url 'home' %}#work">{% t 'back_to_work' %}</a></p>
+  <p class="kicker">{% t 'project_file' %}</p>
   <h1 class="mega small">{{ project.title }}</h1>
-  {% if project.tagline %}<p class="headline">{{ project.tagline }}</p>{% endif %}
+  {% pick project 'tagline' as tagline %}{% if tagline %}<p class="headline">{{ tagline }}</p>{% endif %}
 
   <div class="duo frame detail-img">
     {% if project.image %}
       <img src="{{ project.image.url }}" alt="{{ project.title }}">
     {% else %}
-      <div class="duo-empty">NO IMAGE<br>upload via admin -&gt;</div>
+      <div class="duo-empty">{% t 'no_image' %}<br>{% t 'upload_via_admin' %}</div>
     {% endif %}
   </div>
 
   <div class="cols">
     <div class="about-text">
-      {{ project.description|linebreaksbr|default:"deskripsi project diisi di admin." }}
+      {% pick project 'description' as desc %}
+      {{ desc|linebreaksbr|default:"" }}{% if not desc %}{% t 'empty_desc' %}{% endif %}
     </div>
     <ul class="facts">
       {% if project.tech %}<li><b>tech</b><span>{{ project.tech }}</span></li>{% endif %}
@@ -30,7 +32,7 @@
 
 {% if others %}
 <section class="wrap section">
-  <h2 class="sec-head"><span>+</span> / more work</h2>
+  <h2 class="sec-head"><span>+</span> / {% t 'more_work' %}</h2>
   <div class="mini-cards">
     {% for p in others %}
     <a class="mini-card" href="{% url 'project_detail' p.slug %}">
