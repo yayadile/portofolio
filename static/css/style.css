@@ -93,7 +93,7 @@ img{max-width:100%}
 }
 .sec-head span{background:var(--blue);color:#fff;padding:0 10px;margin-right:8px}
 .cols{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
-.about-text{font-size:16px;max-width:56ch}
+.about-text{max-width:660px;margin:0 auto}
 .facts{list-style:none;margin:0;padding:0;border:3px solid var(--blue)}
 .facts li{display:flex;justify-content:space-between;gap:16px;padding:10px 14px;border-bottom:2px solid var(--blue);font-size:13px}
 .facts li:last-child{border-bottom:none}
@@ -155,6 +155,29 @@ img{max-width:100%}
 .footer{background:var(--blue);color:#fff;margin-top:64px}
 .footer-in{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px;font-size:12px}
 .footer a{color:#fff}
+
+/* ---- 3D ID card ---- */
+.idcard-stage{perspective:1400px;display:flex;justify-content:center;margin-bottom:12px}
+.idcard{
+  position:relative;width:min(660px,100%);aspect-ratio:2083/1273;
+  transform-style:preserve-3d;cursor:grab;touch-action:pan-y;
+  user-select:none;-webkit-user-select:none;outline:none;
+}
+.idcard:active{cursor:grabbing}
+.idcard:focus-visible{outline:3px solid var(--blue);outline-offset:6px;border-radius:24px}
+.idcard-face{
+  position:absolute;inset:0;overflow:hidden;border-radius:22px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  box-shadow:10px 12px 0 rgba(0,51,255,.16);
+}
+.idcard-face img{
+  display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;
+  -webkit-user-drag:none;user-select:none;
+}
+.idcard-back{transform:rotateY(180deg)}
+.idcard-link{position:absolute;display:block;z-index:2;border-radius:8px}
+.idcard-link:hover{outline:2px solid rgba(255,255,255,.9);outline-offset:2px}
+.flip-hint{text-align:center;font-size:12px;letter-spacing:1px;margin:0 0 36px;opacity:.75}
 
 /* ---- responsive ---- */
 @media (max-width:760px){

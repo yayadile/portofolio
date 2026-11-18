@@ -1,31 +1,7 @@
 {% extends "base.html" %}
-{% load lang_tags %}
+{% load static lang_tags %}
 {% block title %}{{ profile.display_name|default:"PORTFOLIO" }} — {% pick profile 'headline' %}{% endblock %}
 {% block content %}
-
-<!-- HERO -->
-<section class="hero wrap">
-  <div class="hero-text">
-    <p class="kicker">{% t 'portfolio_vol' %}</p>
-    <h1 class="mega">{{ profile.display_name|default:"YOUR NAME" }}</h1>
-    <p class="headline">{% pick profile 'headline' %}</p>
-    <p class="meta-line">
-      {% if profile.pronouns %}[{{ profile.pronouns }}]{% endif %}
-      {% if profile.location %} — {{ profile.location }}{% endif %}
-    </p>
-  </div>
-
-  <div class="hero-photo">
-    <div class="duo frame">
-      {% if profile.photo %}
-        <img src="{{ profile.photo.url }}" alt="{{ profile.display_name }}">
-      {% else %}
-        <div class="duo-empty">{% t 'no_photo' %}<br>{% t 'upload_via_admin' %}</div>
-      {% endif %}
-    </div>
-    <span class="stamp">100% human*</span>
-  </div>
-</section>
 
 <!-- MARQUEE -->
 <div class="marquee" aria-hidden="true">
@@ -39,17 +15,26 @@
 <!-- ABOUT -->
 <section id="about" class="wrap section">
   <h2 class="sec-head"><span>01</span> / {% t 'sec_about' %}</h2>
-  <div class="cols">
-    <div class="about-text">
-      {% pick profile 'about' as about_text %}
-      {{ about_text|linebreaksbr|default:"" }}{% if not about_text %}{% t 'empty_about' %}{% endif %}
+  <div class="idcard-stage">
+  <div class="idcard" id="idcard" tabindex="0" role="button" aria-label="ID card">
+    <div class="idcard-face idcard-front">
+      <img src="{% static 'img/id-front.png' %}" alt="ID card — Lawan Tirani" draggable="false">
+      {% if profile.instagram_url %}
+      <a class="idcard-link" style="left:83.5%;top:72.2%;width:5.5%;height:8.8%" href="{{ profile.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"></a>
+      {% endif %}
+      {% if profile.linkedin_url %}
+      <a class="idcard-link" style="left:89.4%;top:72.3%;width:5.2%;height:8.4%" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"></a>
+      {% endif %}
     </div>
-    <ul class="facts">
-      <li><b>{% t 'fact_name' %}</b><span>{{ profile.display_name }}</span></li>
-      <li><b>{% t 'fact_pronouns' %}</b><span>{{ profile.pronouns|default:"-" }}</span></li>
-      <li><b>{% t 'fact_based' %}</b><span>{{ profile.location|default:"-" }}</span></li>
-      <li><b>{% t 'fact_focus' %}</b><span>{% t 'fact_focus_val' %}</span></li>
-    </ul>
+    <div class="idcard-face idcard-back">
+      <img src="{% static 'img/id-back.png' %}" alt="ID card — Wank/Yaya" draggable="false">
+    </div>
+  </div>
+</div>
+<p class="flip-hint">{% t 'flip_hint' %}</p>
+  <div class="about-text">
+    {% pick profile 'about' as about_text %}
+    {{ about_text|linebreaksbr|default:"" }}{% if not about_text %}{% t 'empty_about' %}{% endif %}
   </div>
 </section>
 
@@ -113,5 +98,76 @@
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  var card = document.getElementById('idcard');
+  if (!card) return;
+  var ry = 0, rx = 0, ty = 0, tx = 0, vy = 0, raf = null;
+  var dragging = false, moved = false, sx = 0, sy = 0, lx = 0, ly = 0;
+
+  function render() {
+    card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+  }
+  function tick() {
+    if (!dragging) {
+      ty += vy; vy *= 0.94;
+      if (Math.abs(vy) < 0.05) vy = 0;
+      if (!vy) {
+        var snap = Math.round(ty / 180) * 180;
+        ty += (snap - ty) * 0.12;
+      }
+      tx += (0 - tx) * 0.1;
+    }
+    ry += (ty - ry) * 0.16;
+    rx += (tx - rx) * 0.16;
+    render();
+    if (dragging || vy || Math.abs(ty - ry) > 0.05 || Math.abs(tx - rx) > 0.05) {
+      raf = requestAnimationFrame(tick);
+    } else { raf = null; }
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+
+  function onDown(e) {
+    dragging = true; moved = false; vy = 0;
+    sx = lx = e.clientX; sy = ly = e.clientY;
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+    kick();
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    var dx = e.clientX - lx, dy = e.clientY - ly;
+    lx = e.clientX; ly = e.clientY;
+    ty += dx * 0.35;
+    tx = Math.max(-25, Math.min(25, tx - dy * 0.15));
+    vy = vy * 0.7 + dx * 0.35 * 0.3;
+    if (Math.abs(e.clientX - sx) > 6 || Math.abs(e.clientY - sy) > 6) moved = true;
+    kick();
+  }
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onUp);
+    kick();
+  }
+  function flip() { ty = Math.round(ty / 180) * 180 + 180; kick(); }
+
+  card.addEventListener('pointerdown', onDown);
+  card.addEventListener('click', function (e) {
+    if (moved) { e.preventDefault(); e.stopPropagation(); return; }
+    if (e.target.closest('a')) return;
+    flip();
+  });
+  card.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+  });
+  render();
+})();
+</script>
+
 
 {% endblock %}

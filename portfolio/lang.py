@@ -1,6 +1,7 @@
 """Kamus string UI: id = default, en = English. Tambah/edit sesukamu."""
 
 STRINGS = {
+    'flip_hint': {'id': 'seret / klik kartunya buat muter', 'en': 'drag / click the card to spin it'},
     'nav_about': {'id': 'tentang', 'en': 'about'},
     'nav_work': {'id': 'karya', 'en': 'work'},
     'nav_stack': {'id': 'stack', 'en': 'stack'},
