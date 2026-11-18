@@ -1,2 +1,4 @@
 django>=6.1,<7
 pillow>=10
+dj-database-url>=3.0
+whitenoise>=6.0
