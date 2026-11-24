@@ -14,12 +14,14 @@ def set_lang(request, code):
 
 def home(request):
     profile = SiteProfile.objects.first()
-    projects = Project.objects.all()
     lang = _lang(request)
+    projects = Project.objects.filter(featured=True)
+    if not projects.exists():
+        # Kalau semua di-uncheck, jangan tampilkan halaman kosong.
+        projects = Project.objects.all()
     return render(request, 'portfolio/home.html', {
         'profile': profile,
         'projects': projects,
-        'featured': projects.filter(featured=True),
         'stack_groups': profile.stack_groups_for(lang) if profile else [],
     })
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, SiteProfile
+from .models import Project, ProjectImage, SiteProfile
 
 
 @admin.register(SiteProfile)
@@ -32,6 +32,12 @@ class SiteProfileAdmin(admin.ModelAdmin):
         return False
 
 
+class ProjectImageInline(admin.TabularInline):
+    model = ProjectImage
+    extra = 1
+    fields = ('image', 'caption', 'order')
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'order', 'featured', 'tagline')
@@ -43,3 +49,4 @@ class ProjectAdmin(admin.ModelAdmin):
         'title', 'slug', 'tagline', 'tagline_en', 'description', 'description_en', 'tech',
         'image', 'link_url', 'repo_url', 'featured', 'order',
     )
+    inlines = [ProjectImageInline]

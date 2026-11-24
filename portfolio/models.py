@@ -84,3 +84,37 @@ class Project(models.Model):
 
     def tech_list(self):
         return [t.strip() for t in self.tech.split(',') if t.strip()]
+
+    @property
+    def cover(self):
+        """Gambar cover buat card di halaman utama.
+
+        Pakai `image` kalau ada; kalau belum, pakai gambar galeri pertama
+        supaya project yang cuma punya foto galeri tetap punya thumbnail.
+        """
+        if self.image:
+            return self.image
+        first = self.images.first()
+        return first.image if first else None
+
+
+class ProjectImage(models.Model):
+    """Gambar tambahan buat satu project (galeri di halaman detail)."""
+    project = models.ForeignKey(
+        Project, related_name='images', on_delete=models.CASCADE,
+        verbose_name='Project',
+    )
+    image = models.ImageField(
+        upload_to='projects/gallery/',
+        help_text='Gambar tambahan. Otomatis jadi duotone biru seperti cover.',
+    )
+    caption = models.CharField(max_length=200, blank=True, help_text='Opsional.')
+    order = models.PositiveIntegerField(default=0, help_text='Kecil = duluan.')
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Project image'
+        verbose_name_plural = 'Project gallery images'
+
+    def __str__(self):
+        return self.caption or f'{self.project.title} — image {self.pk or "baru"}'

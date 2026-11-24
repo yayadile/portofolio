@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
 
-admin.site.site_header = 'Portfolio Admin'
-admin.site.site_title = 'Portfolio Admin'
+admin.site.site_header = 'Content Manager'
+admin.site.site_title = 'Content Manager'
 admin.site.index_title = 'Atur semua konten web dari sini'
 
 def health_check(request):
@@ -14,7 +14,7 @@ def health_check(request):
 urlpatterns = [
     path('health', health_check),
     path('health/', health_check),
-    path('admin/', admin.site.urls),
+    path('manage-7k2x/', admin.site.urls),
     path('', include('portfolio.urls')),
 ]
 

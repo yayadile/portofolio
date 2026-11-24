@@ -26,19 +26,22 @@ python manage.py runserver
 
 Buka:
 - Web: http://127.0.0.1:8000
-- Admin: http://127.0.0.1:8000/admin (login pake akun tadi)
+- Admin: http://127.0.0.1:8000/manage-7k2x/ (login pake akun tadi)
 
 ## Yang bisa di-setting di admin
 
 | Menu | Buat apa |
 |---|---|
 | **Site profiles** | Nama tampil, pronouns, headline, lokasi, foto profil, bio, email, link GitHub/IG/LinkedIn, tech stack, teks marquee |
-| **Projects** | Tambah/edit/hapus project: judul, tagline, deskripsi, tech, gambar, link demo, link repo, urutan tampil (`order`), tampil/nggak (`featured`) |
+| **Projects** | Tambah/edit/hapus project: judul, tagline, deskripsi, tech, gambar cover, link demo, link repo, urutan tampil (`order`), tampil/nggak (`featured`) |
+| **Project gallery images** | (di dalam form Project) Tambah **lebih dari satu gambar** per project. Muncul sebagai strip thumbnail di halaman detail. |
 
 Catatan:
 - **Foto apapun yang di-upload otomatis jadi duotone biru-putih** (efek posterize via CSS). Jadi tinggal upload foto biasa aja.
 - Profil cuma bisa satu — tombol "add" disembunyikan kalau udah ada.
 - Urutan project diatur dari kolom `order` (kecil = duluan).
+- Project tanpa gambar cover tetap tampil pakai gambar galeri pertama; kalau dua-duanya kosong, card nampilin nama project sebagai placeholder.
+- **URL admin sengaja disembunyikan** — buka `/manage-7k2x/`, bukan `/admin/`. Ganti path-nya di `config/urls.py` kalau perlu.
 
 ## Fitur translate ID/EN
 

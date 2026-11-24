@@ -9,8 +9,18 @@
     {% pick profile 'marquee_text' as marquee %}
     <span>{{ marquee }}</span>
     <span>{{ marquee }}</span>
+    <span>{{ marquee }}</span>
+    <span>{{ marquee }}</span>
   </div>
 </div>
+
+<!-- HERO -->
+<section class="wrap hero">
+  <p class="kicker">{% t 'portfolio_vol' %}</p>
+  <h1 class="mega">{{ profile.display_name|default:"PORTFOLIO" }}</h1>
+  <p class="headline">{% pick profile 'headline' %}</p>
+  {% if profile.location %}<p class="meta-line">{{ profile.location }}{% if profile.pronouns %} · {{ profile.pronouns }}{% endif %}</p>{% endif %}
+</section>
 
 <!-- ABOUT -->
 <section id="about" class="wrap section">
@@ -18,7 +28,7 @@
   <div class="idcard-stage">
   <div class="idcard" id="idcard" tabindex="0" role="button" aria-label="ID card">
     <div class="idcard-face idcard-front">
-      <img src="{% static 'img/id-front.png' %}" alt="ID card — Lawan Tirani" draggable="false">
+      <img src="{% static 'img/id-front.webp' %}" alt="ID card — Lawan Tirani" draggable="false">
       {% if profile.instagram_url %}
       <a class="idcard-link" style="left:83.5%;top:72.2%;width:5.5%;height:8.8%" href="{{ profile.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"></a>
       {% endif %}
@@ -27,7 +37,7 @@
       {% endif %}
     </div>
     <div class="idcard-face idcard-back">
-      <img src="{% static 'img/id-back.png' %}" alt="ID card — Wank/Yaya" draggable="false">
+      <img src="{% static 'img/id-back.webp' %}" alt="ID card — Wank/Yaya" draggable="false">
     </div>
   </div>
 </div>
@@ -45,10 +55,11 @@
     {% for p in projects %}
     <article class="card {% cycle 'card-white' 'card-blue' %}">
       <a class="card-img duo" href="{% url 'project_detail' p.slug %}">
-        {% if p.image %}
-          <img src="{{ p.image.url }}" alt="{{ p.title }}">
+        {% if p.cover %}
+          <img src="{{ p.cover.url }}" alt="{{ p.title }}">
         {% else %}
-          <div class="duo-empty">{% t 'no_image' %}</div>
+          <span class="card-placeholder" aria-hidden="true">{{ p.title }}</span>
+          <span class="sr-only">{% t 'no_image' %}</span>
         {% endif %}
       </a>
       <div class="card-body">
@@ -71,7 +82,7 @@
 
 <!-- STACK -->
 <section id="stack" class="wrap section">
-  <h2 class="sec-head"><span>03</span> / stack</h2>
+  <h2 class="sec-head"><span>03</span> / {% t 'nav_stack' %}</h2>
   <div class="stack-box">
     {% for name, items in stack_groups %}
     <div class="stack-row">

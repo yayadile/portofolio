@@ -9,13 +9,33 @@
   <h1 class="mega small">{{ project.title }}</h1>
   {% pick project 'tagline' as tagline %}{% if tagline %}<p class="headline">{{ tagline }}</p>{% endif %}
 
-  <div class="duo frame detail-img">
-    {% if project.image %}
-      <img src="{{ project.image.url }}" alt="{{ project.title }}">
-    {% else %}
-      <div class="duo-empty">{% t 'no_image' %}<br>{% t 'upload_via_admin' %}</div>
+  {% with gallery=project.images.all %}
+  <div class="gallery">
+    <div class="duo frame detail-img" id="detail-main">
+      {% if project.image %}
+        <img src="{{ project.image.url }}" alt="{{ project.title }}" id="detail-main-img">
+      {% elif gallery %}
+        <img src="{{ gallery.0.image.url }}" alt="{{ gallery.0.caption|default:project.title }}" id="detail-main-img">
+      {% else %}
+        <div class="duo-empty">{% t 'no_image' %}</div>
+      {% endif %}
+    </div>
+    {% if gallery %}
+    <div class="thumbs" role="list">
+      {% if project.image %}
+      <button type="button" class="thumb is-active" data-src="{{ project.image.url }}" aria-label="{% t 'cover' %}">
+        <img src="{{ project.image.url }}" alt="{{ project.title }}">
+      </button>
+      {% endif %}
+      {% for g in gallery %}
+      <button type="button" class="thumb{% if not project.image and forloop.first %} is-active{% endif %}" data-src="{{ g.image.url }}" aria-label="{{ g.caption|default:project.title }}">
+        <img src="{{ g.image.url }}" alt="{{ g.caption|default:project.title }}">
+      </button>
+      {% endfor %}
+    </div>
     {% endif %}
   </div>
+  {% endwith %}
 
   <div class="cols">
     <div class="about-text">
@@ -29,6 +49,21 @@
     </ul>
   </div>
 </section>
+
+<script>
+(function () {
+  var main = document.getElementById('detail-main-img');
+  var thumbs = document.querySelectorAll('.thumb');
+  if (!main || !thumbs.length) return;
+  thumbs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      main.src = btn.getAttribute('data-src');
+      thumbs.forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+    });
+  });
+})();
+</script>
 
 {% if others %}
 <section class="wrap section">
